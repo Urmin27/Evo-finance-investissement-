@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minage Automatique - Trading</title>
+  <!-- Importation d'une police moderne depuis Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
+      overflow-x: hidden;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: 700;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    /* Header image */
+    .header-img {
+      display: block;
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      animation: fadeIn 2s ease-in-out;
+      border-bottom: 5px solid #fff;
+    }
+    /* Navigation boutons */
+    #nav-buttons {
+      text-align: center;
+      margin: 20px 0;
+    }
+    #nav-buttons .button {
+      background-color: #ff9800;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 25px;
+      font-weight: 700;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+    #nav-buttons .button:hover {
+      transform: scale(1.1);
+      background-color: #e68900;
+    }
+    /* Sections */
+    #mining-section, #transactions-section, #trading-section {
+      background: rgba(255,255,255,0.1);
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 800px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      animation: slideIn 1s ease-out;
+    }
+    /* Titres de section */
+    h3 {
+      margin-top: 20px;
+      font-weight: 700;
+    }
+    /* Style global */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1a3b6e; /* Bleu foncé */
+      text-align: center;
+      padding: 20px;
+    }
+    /* Style des boutons */
+    .link-button {
+      display: inline-block;
+      background-color: #ff5c1c; /* Orange */
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 12px 20px;
+      border-radius: 25px; /* Bord arrondi */
+      text-decoration: none;
+      margin: 10px;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    /* Animation au survol */
+    .link-button:hover {
+      transform: scale(1.1);
+      background-color: #e44d12; /* Orange plus foncé */
+    }
+    /* Disposition en grille */
+    #extra-sections {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    /* Champs de formulaire */
+    input[type="number"], input[type="text"], select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+      font-size: 1em;
+    }
+    /* Tableau */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.2);
+      margin-top: 20px;
+      animation: fadeIn 1s ease-in;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    th {
+      background-color: rgba(0,0,0,0.3);
+      font-weight: 700;
+    }
+    /* Notification en haut */
+    #notification {
+      text-align: center;
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
+    /* Notification centrale pendant le minage */
+    #mining-notification {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1000;
+    }
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideIn {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    /* Extra sections (liens) */
+    #extra-sections {
+      max-width: 800px;
+      margin: 20px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      animation: slideIn 1s ease-out;
+    }
+    .link-button {
+      background-color: #ff5722;
+      text-decoration: none;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 700;
+      transition: transform 0.3s, background-color 0.3s;
+      display: inline-block;
+    }
+    .link-button:hover {
+      background-color: #e64a19;
+      transform: translateY(-3px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header image sur le thème Trading -->
+  <img class="header-img" src="https://via.placeholder.com/1200x300.png?text=Trading+Dashboard" alt="Trading ">
+  
+  <h1>Minage Automatique</h1>
+  
+  <!-- Boutons de navigation entre Minage et Transactions -->
+  <div id="nav-buttons">
+    <button id="show-mining" class="button">Minage</button>
+    <button id="show-transactions" class="button">Transactions</button>
+  </div>
+  
+  <!-- Section Minage -->
+  <div id="mining-section">
+    <p>Solde actuel : <span id="balance">0</span> USDT</p>
+    <p>Gains : <span id="solde-gains">0</span> USDT</p>
+    <button id="start-mining" class="button">Commencer à travailler</button>
+    <p id="contract-status"></p>
+  </div>
+  
+  <div class="scrolling-text-container">
+    <marquee behavior="scroll" direction="left">
+      EvoFinance Ltd est une entreprise spécialisée dans le trading automatisé et la gestion de capitaux sur les marchés financiers. Fondée à Londres, notre mission est de rendre l’investissement accessible à tous grâce à des technologies avancées et une expertise éprouvée.
+      Nous utilisons des algorithmes de trading et l’intelligence artificielle pour optimiser les rendements de nos investisseurs. Nos services couvrent plusieurs domaines, notamment les cryptomonnaies, le Forex et les actions boursière. 🚀 Gagnez un bonus de 1% pour chaque inscription via votre lien, même sans dépôt ! 🎉 Plus de 500 membres dans votre équipe = récompense de 10 $ ! 🔥 Profitez de cette opportunité dès maintenant !
+    </marquee>
+  </div>
+  
+  <!-- Section Transactions -->
+  <div id="transactions-section" style="display: none;">
+    <!-- Formulaire Dépôt -->
+    <h3>Dépôt</h3>
+    <button id="depot-btn" class="button">Faire un dépôt</button>
+    <div id="depot-form" style="display: none;">
+      <label for="montant-depot">Montant du dépôt (USDT):</label>
+      <input type="number" id="montant-depot" required>
+      <label for="adresse-depot">Adresse du dépôt:</label>
+      <select id="adresse-depot">
+        <option value="adresse1">Adresse 1</option>
+        <option value="adresse2">Adresse 2</option>
+      </select>
+      <button id="copy-deposit-address" class="button">Copier l'adresse</button>
+      <button id="valider-depot" class="button">Valider le dépôt</button>
+    </div>
+  
+    <!-- Formulaire Retrait -->
+    <h3>Retrait</h3>
+    <button id="retrait-btn" class="button">Faire un retrait</button>
+    <div id="retrait-form" style="display: none;">
+      <label for="montant-retrait">Montant à retirer:</label>
+      <input type="number" id="montant-retrait" required>
+      <label for="adresse-retrait">Adresse du retrait:</label>
+      <input type="text" id="adresse-retrait" required>
+      <button id="valider-retrait" class="button">Valider le retrait</button>
+    </div>
+  
+    <!-- Tableau des Transactions -->
+    <h3>Transactions</h3>
+    <button id="show-transactions-btn" class="button">Voir les transactions</button>
+    <div id="transactions-table" style="display: none;">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Montant</th>
+            <th>Adresse</th>
+            <th>Date</th>
+            <th>Statut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="transactions-list"></tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- Section Extra : Liens vers d'autres pages -->
+  <div id="extra-sections">
+    <a href="https://evo-finance-seven.vercel.app/" target="_blank" class="link-button">Entreprise</a>
+    <a href="https://evo-finance-quipe-ivl7.vercel.app/" target="_blank" class="link-button">Gestion d'équipes</a>
+    <a href="https://evo-finance-guide.vercel.app/" target="_blank" class="link-button">Guide complet</a>
+    <a href="https://evo-finance-bot-f1po.vercel.app/" target="_blank" class="link-button">Besoin d'aide ?</a>
+  </div>
+  <a href="https://evo-finance-demande-du-d-p-t.vercel.app/" target="_blank" class="link-button">Dépôt Evo. Fin</a>
+  <a href="https://evo-finance-demande-retrait.vercel.app/" target="_blank" class="link-button">Retrait Evo. Fin</a>
+  <a href="https://www.facebook.com/profile.php?id=61573270100474" target="_blank" class="link-button">Service client</a>
+  
+  <!-- Section Trading : Tableau des cryptomonnaies en temps réel -->
+  <div id="trading-section">
+    <h3>Tableaux de Trading</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Crypto</th>
+          <th>Valeur (USD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>BTC</td>
+          <td id="price-btc">$0</td>
+        </tr>
+        <tr>
+          <td>BNB</td>
+          <td id="price-bnb">$0</td>
+        </tr>
+        <tr>
+          <td>LTC</td>
+          <td id="price-ltc">$0</td>
+        </tr>
+        <tr>
+          <td>DOGE</td>
+          <td id="price-doge">$0</td>
+        </tr>
+        <tr>
+          <td>TRON</td>
+          <td id="price-tron">$0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Notification (en haut) -->
+  <div id="notification" class="notification"></div>
+  
+  <!-- Notification centrale pendant le minage -->
+  <div id="mining-notification">Travail en cours...</div>
+  
+  <script>
+    /**************************************
+     * INITIALISATION DES VARIABLES
+     **************************************/
+    if(getLocalStorage("balance") === null) { setLocalStorage("balance", 0); }
+    if(getLocalStorage("soldeGains") === null) { setLocalStorage("soldeGains", 0); }
+    if(getLocalStorage("transactions") === null) { setLocalStorage("transactions", []); }
+    if(getLocalStorage("lastDeposit") === null) { setLocalStorage("lastDeposit", ""); }
+    if(getLocalStorage("lastWithdrawal") === null) { setLocalStorage("lastWithdrawal", ""); }
+    
+    /* 
+     * CONTRACT_DURATION : durée du contrat en millisecondes.
+     * Ici, le contrat dure 2 592 000 secondes (30 jours).
+     */
+    const CONTRACT_DURATION = 2592000 * 1000;
+    const TRANSACTION_DELAY = 120000; // 2 minutes pour confirmation automatique
+    const ACCESS_CODE = "1234"; // Code d'accès pour afficher les transactions
+  
+    /**************************************
+     * FONCTIONS UTILITAIRES
+     **************************************/
+    function getLocalStorage(key, defaultValue = null) {
+      const value = localStorage.getItem(key);
+      return value ? JSON.parse(value) : defaultValue;
+    }
+  
+    function setLocalStorage(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  
+    function showNotification(message) {
+      document.getElementById("notification").innerText = message;
+    }
+  
+    function updateUI() {
+      const balance = getLocalStorage("balance", 0);
+      const soldeGains = getLocalStorage("soldeGains", 0);
+      document.getElementById("balance").innerText = balance;
+      document.getElementById("solde-gains").innerText = soldeGains;
+      updateContractStatus();
+    }
+  
+    function updateContractStatus() {
+      const contractEnd = getLocalStorage("contractEnd", null);
+      const contractStatusElem = document.getElementById("contract-status");
+      if (contractEnd) {
+        const now = Date.now();
+        if (now < contractEnd) {
+          const remainingTime = contractEnd - now;
+          contractStatusElem.innerText = `Le robot travaille encore... Temps restant : ${Math.ceil(remainingTime/1000)} seconde(s).`;
+        } else {
+          contractStatusElem.innerText = "Contrat expiré.";
+        }
+      } else {
+        contractStatusElem.innerText = "";
+      }
+    }
+  
+    /**************************************
+     * GESTION DES TRANSACTIONS
+     **************************************/
+    function processPendingTransactions() {
+      let transactions = getLocalStorage("transactions", []);
+      const now = Date.now();
+      let updated = false;
+      transactions.forEach(tx => {
+        if (tx.statut === "En attente" && (now - tx.timestamp) >= TRANSACTION_DELAY) {
+          confirmTransaction(tx.id);
+          updated = true;
+        }
+      });
+      if (updated) {
+        setLocalStorage("transactions", transactions);
+        updateUI();
+      }
+    }
+  
+    function addTransaction(type, montant, adresse) {
+      let transactions = getLocalStorage("transactions", []);
+      const duplicate = transactions.find(tx => tx.type === type && tx.statut === "En attente");
+      if (duplicate) {
+        showNotification(`Une demande de ${type} est déjà en attente.`);
+        return null;
+      }
+      const transaction = {
+        id: Date.now(),
+        type: type,
+        montant: montant,
+        adresse: adresse,
+        statut: "En attente",
+        timestamp: Date.now()
+      };
+      transactions.push(transaction);
+      setLocalStorage("transactions", transactions);
+      updateUI();
+      return transaction.id;
+    }
+  
+    function confirmTransaction(transactionId) {
+      let transactions = getLocalStorage("transactions", []);
+      const tx = transactions.find(tx => tx.id === transactionId);
+      if (tx && tx.statut === "En attente") {
+        tx.statut = "Confirmé";
+        if (tx.type === "Dépôt") {
+          let balance = getLocalStorage("balance", 0);
+          balance += tx.montant;
+          setLocalStorage("balance", balance);
+          showNotification("Dépôt confirmé !");
+        }
+        if (tx.type === "Retrait") {
+          let soldeGains = getLocalStorage("soldeGains", 0);
+          let fraisRetrait = tx.montant * 0.01; // 1% de frais
+          if (soldeGains >= tx.montant) {
+            soldeGains -= tx.montant;
+            setLocalStorage("soldeGains", soldeGains);
+            showNotification(`Retrait confirmé ! Frais appliqués : ${fraisRetrait} USDT.`);
+          } else {
+            showNotification("Solde insuffisant pour le retrait.");
+            tx.statut = "Annulé";
+          }
+        }
+        setLocalStorage("transactions", transactions);
+        updateUI();
+      }
+    }
+  
+    function cancelTransaction(transactionId) {
+      let transactions = getLocalStorage("transactions", []);
+      const tx = transactions.find(tx => tx.id === transactionId);
+      if (tx && tx.statut === "En attente") {
+        tx.statut = "Annulé";
+        setLocalStorage("transactions", transactions);
+        updateUI();
+        showNotification("Transaction annulée.");
+      }
+    }
+  
+    function afficherTransactions() {
+      const transactions = getLocalStorage("transactions", []);
+      const tableBody = document.getElementById("transactions-list");
+      tableBody.innerHTML = "";
+      transactions.forEach(tx => {
+        const dateStr = new Date(tx.timestamp).toLocaleString();
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${tx.id}</td>
+          <td>${tx.type}</td>
+          <td>${tx.montant}</td>
+          <td>${tx.adresse}</td>
+          <td>${dateStr}</td>
+          <td>${tx.statut}</td>
+          <td>
+            <button class="button" onclick="confirmTransaction(${tx.id})">Confirmer</button>
+            <button class="button" onclick="cancelTransaction(${tx.id})">Annuler</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      document.getElementById("transactions-table").style.display = "block";
+    }
+  
+    /**************************************
+     * GESTION DU CONTRAT DE MINAGE
+     **************************************/
+    function startContract() {
+      const now = Date.now();
+      if (getLocalStorage("contractEnd", null) && now < getLocalStorage("contractEnd", 0)) {
+        showNotification("Un contrat est déjà en cours.");
+        return;
+      }
+      const contractEnd = now + CONTRACT_DURATION;
+      setLocalStorage("contractStart", now);
+      setLocalStorage("contractEnd", contractEnd);
+      const startDateStr = new Date(now).toLocaleString();
+      const endDateStr = new Date(contractEnd).toLocaleString();
+      showNotification(`Le robot commence à travailler. Contrat du ${startDateStr} au ${endDateStr}.`);
+      
+      // Affichage de la notification centrale indiquant que le travail est en cours
+      const miningNotif = document.getElementById("mining-notification");
+      miningNotif.style.display = "block";
+      miningNotif.innerText = "Le travail de minage est en cours. Veuillez patienter 2592000 secondes...";
+      
+      updateContractStatus();
+      setTimeout(finishContract, CONTRACT_DURATION);
+    }
+  
+    function finishContract() {
+      // Masquer la notification centrale de minage
+      document.getElementById("mining-notification").style.display = "none";
+  
+      const balance = getLocalStorage("balance", 0);
+      const gains = balance * 0.05;
+      let soldeGains = getLocalStorage("soldeGains", 0);
+      soldeGains += balance + gains;
+      setLocalStorage("soldeGains", soldeGains);
+      setLocalStorage("balance", 0);
+      localStorage.removeItem("contractStart");
+      localStorage.removeItem("contractEnd");
+      updateUI();
+      showNotification("Contrat terminé ! Vos gains ont été ajoutés.");
+    }
+  
+    function checkOngoingContract() {
+      const contractEnd = getLocalStorage("contractEnd", null);
+      if (contractEnd) {
+        const now = Date.now();
+        if (now < contractEnd) {
+          const remainingTime = contractEnd - now;
+          setTimeout(finishContract, remainingTime);
+          updateContractStatus();
+        } else {
+          finishContract();
+        }
+      }
+    }
+  
+    /**************************************
+     * MISE À JOUR DES PRIX DES CRYPTOMONNAIES
+     **************************************/
+    function updateCryptoPrices() {
+      fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,binancecoin,litecoin,dogecoin,tron&vs_currencies=usd")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("price-btc").innerText = "$" + data.bitcoin.usd.toLocaleString();
+        document.getElementById("price-bnb").innerText = "$" + data.binancecoin.usd.toLocaleString();
+        document.getElementById("price-ltc").innerText = "$" + data.litecoin.usd.toLocaleString();
+        document.getElementById("price-doge").innerText = "$" + data.dogecoin.usd.toLocaleString();
+        document.getElementById("price-tron").innerText = "$" + data.tron.usd.toLocaleString();
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des prix : ", error);
+      });
+    }
+  
+    /**************************************
+     * GESTION DES ÉVÉNEMENTS UTILISATEUR
+     **************************************/
+    document.getElementById("start-mining").addEventListener("click", function() {
+      const balance = getLocalStorage("balance", 0);
+      if (balance <= 0) {
+        showNotification("Vous devez déposer avant de commencer !");
+        return;
+      }
+      startContract();
+    });
+  
+    document.getElementById("depot-btn").addEventListener("click", function() {
+      document.getElementById("depot-form").style.display = "block";
+    });
+  
+    document.getElementById("valider-depot").addEventListener("click", function() {
+      const montantDepot = parseFloat(document.getElementById("montant-depot").value);
+      const adresseDepot = document.getElementById("adresse-depot").value;
+      if (isNaN(montantDepot) || montantDepot <= 0) {
+        alert("Montant invalide.");
+        return;
+      }
+      let today = new Date().toISOString().split("T")[0];
+      let lastDeposit = getLocalStorage("lastDeposit", "");
+      if (lastDeposit === today) {
+        alert("Vous ne pouvez déposer qu'une fois par jour.");
+        return;
+      }
+      const transactionId = addTransaction("Dépôt", montantDepot, adresseDepot);
+      if (transactionId) {
+        setLocalStorage("lastDeposit", today);
+        setTimeout(function() {
+          confirmTransaction(transactionId);
+        }, TRANSACTION_DELAY);
+        showNotification("Dépôt en attente de vérification.");
+        document.getElementById("depot-form").style.display = "none";
+      }
+    });
+  
+    // Bouton pour copier l'adresse du dépôt
+    document.getElementById("copy-deposit-address").addEventListener("click", function() {
+      const depositAddress = document.getElementById("adresse-depot").value;
+      navigator.clipboard.writeText(depositAddress)
+      .then(() => showNotification("Adresse copiée dans le presse-papiers !"))
+      .catch(err => showNotification("Erreur lors de la copie de l'adresse."));
+    });
+  
+    document.getElementById("retrait-btn").addEventListener("click", function() {
+      document.getElementById("retrait-form").style.display = "block";
+    });
+  
+    document.getElementById("valider-retrait").addEventListener("click", function() {
+      const montantRetrait = parseFloat(document.getElementById("montant-retrait").value);
+      const adresseRetrait = document.getElementById("adresse-retrait").value;
+      const soldeGains = getLocalStorage("soldeGains", 0);
+      if (isNaN(montantRetrait) || montantRetrait <= 0 || montantRetrait > soldeGains) {
+        alert("Montant invalide ou solde insuffisant.");
+        return;
+      }
+      let today = new Date().toISOString().split("T")[0];
+      let lastWithdrawal = getLocalStorage("lastWithdrawal", "");
+      if (lastWithdrawal === today) {
+        alert("Vous ne pouvez retirer qu'une fois par jour.");
+        return;
+      }
+      const transactionId = addTransaction("Retrait", montantRetrait, adresseRetrait);
+      if (transactionId) {
+        setLocalStorage("lastWithdrawal", today);
+        setTimeout(function() {
+          confirmTransaction(transactionId);
+        }, TRANSACTION_DELAY);
+        showNotification("Retrait en attente de vérification.");
+        document.getElementById("retrait-form").style.display = "none";
+      }
+    });
+  
+    document.getElementById("show-transactions-btn").addEventListener("click", function() {
+      const code = prompt("Veuillez entrer le code d'accès :");
+      if (code === ACCESS_CODE) {
+        afficherTransactions();
+      } else {
+        alert("Code incorrect !");
+      }
+    });
+  
+    /**************************************
+     * NAVIGATION ENTRE LES SECTIONS
+     **************************************/
+    document.getElementById("show-mining").addEventListener("click", function() {
+      document.getElementById("mining-section").style.display = "block";
+      document.getElementById("transactions-section").style.display = "none";
+    });
+  
+    document.getElementById("show-transactions").addEventListener("click", function() {
+      document.getElementById("mining-section").style.display = "none";
+      document.getElementById("transactions-section").style.display = "block";
+    });
+  
+    /**************************************
+     * INITIALISATION AU CHARGEMENT DE LA PAGE
+     **************************************/
+    updateUI();
+    checkOngoingContract();
+    processPendingTransactions();
+    setInterval(processPendingTransactions, 60000);
+    // Mise à jour des prix des cryptomonnaies toutes les 60 secondes
+    updateCryptoPrices();
+    setInterval(updateCryptoPrices, 60000);
+  </script>
+</body>
+</html>
