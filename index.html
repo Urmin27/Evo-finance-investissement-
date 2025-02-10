@@ -68,27 +68,26 @@
     /* Style global */
     body {
       font-family: Arial, sans-serif;
-      background-color: #1a3b6e; /* Bleu foncé */
+      background-color: #1a3b6e;
       text-align: center;
       padding: 20px;
     }
     /* Style des boutons */
     .link-button {
       display: inline-block;
-      background-color: #ff5c1c; /* Orange */
+      background-color: #ff5c1c;
       color: white;
       font-size: 18px;
       font-weight: bold;
       padding: 12px 20px;
-      border-radius: 25px; /* Bord arrondi */
+      border-radius: 25px;
       text-decoration: none;
       margin: 10px;
       transition: transform 0.3s ease, background-color 0.3s ease;
     }
-    /* Animation au survol */
     .link-button:hover {
       transform: scale(1.1);
-      background-color: #e44d12; /* Orange plus foncé */
+      background-color: #e44d12;
     }
     /* Disposition en grille */
     #extra-sections {
@@ -179,7 +178,7 @@
 </head>
 <body>
   <!-- Header image sur le thème Trading -->
-  <img class="header-img" src="https://via.placeholder.com/1200x300.png?text=Trading+Dashboard" alt="Trading ">
+  <img class="header-img" src="https://via.placeholder.com/1200x300.png?text=Trading+Dashboard" alt="Trading">
   
   <h1>Minage Automatique</h1>
   
@@ -200,7 +199,7 @@
   <div class="scrolling-text-container">
     <marquee behavior="scroll" direction="left">
       EvoFinance Ltd est une entreprise spécialisée dans le trading automatisé et la gestion de capitaux sur les marchés financiers. Fondée à Londres, notre mission est de rendre l’investissement accessible à tous grâce à des technologies avancées et une expertise éprouvée.
-      Nous utilisons des algorithmes de trading et l’intelligence artificielle pour optimiser les rendements de nos investisseurs. Nos services couvrent plusieurs domaines, notamment les cryptomonnaies, le Forex et les actions boursière. 🚀 Gagnez un bonus de 1% pour chaque inscription via votre lien, même sans dépôt ! 🎉 Plus de 500 membres dans votre équipe = récompense de 10 $ ! 🔥 Profitez de cette opportunité dès maintenant !
+      Nous utilisons des algorithmes de trading et l’intelligence artificielle pour optimiser les rendements de nos investisseurs. 🚀 Gagnez un bonus de 1% pour chaque inscription via votre lien, même sans dépôt ! 🎉 Plus de 500 membres dans votre équipe = récompense de 10 $ ! 🔥 Profitez de cette opportunité dès maintenant !
     </marquee>
   </div>
   
@@ -317,9 +316,9 @@
     
     /* 
      * CONTRACT_DURATION : durée du contrat en millisecondes.
-     * Ici, le contrat dure 2 592 000 secondes (30 jours).
+     * Ici, le contrat dure 2590.000 secondes (soit 2590 * 1000 ms).
      */
-    const CONTRACT_DURATION = 2592000 * 1000;
+    const CONTRACT_DURATION = 2590 * 1000;
     const TRANSACTION_DELAY = 120000; // 2 minutes pour confirmation automatique
     const ACCESS_CODE = "1234"; // Code d'accès pour afficher les transactions
   
@@ -354,7 +353,8 @@
         const now = Date.now();
         if (now < contractEnd) {
           const remainingTime = contractEnd - now;
-          contractStatusElem.innerText = `Le robot travaille encore... Temps restant : ${Math.ceil(remainingTime/1000)} seconde(s).`;
+          // Affichage avec 3 décimales
+          contractStatusElem.innerText = `Le robot travaille encore... Temps restant : ${(remainingTime/1000).toFixed(3)} seconde(s).`;
         } else {
           contractStatusElem.innerText = "Contrat expiré.";
         }
@@ -485,7 +485,7 @@
       // Affichage de la notification centrale indiquant que le travail est en cours
       const miningNotif = document.getElementById("mining-notification");
       miningNotif.style.display = "block";
-      miningNotif.innerText = "Le travail de minage est en cours. Veuillez patienter 2592000 secondes...";
+      miningNotif.innerText = "Le travail de minage est en cours. Veuillez patienter 2590.000 secondes...";
       
       updateContractStatus();
       setTimeout(finishContract, CONTRACT_DURATION);
